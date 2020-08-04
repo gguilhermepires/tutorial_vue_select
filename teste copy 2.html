@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- include VueJS first -->
+<script src="https://unpkg.com/vue@latest"></script>
+
+<!-- use the latest vue-select release -->
+<script src="https://unpkg.com/vue-select@latest"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
+
+<!-- or point to a specific vue-select release -->
+<script src="https://unpkg.com/vue-select@3.0.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
+<style>
+    body {
+  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+}
+
+h1,.muted {
+  color: #2c3e5099;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 600;
+  text-rendering: optimizelegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-text-size-adjust: none;
+}
+
+#app {
+  max-width: 30em;
+  margin: 1em auto;
+}
+
+#app .dropdown li {
+  border-bottom: 1px solid rgba(112, 128, 144, 0.1)
+}
+
+#app .dropdown li:last-child {
+  border-bottom: none;
+}
+
+#app .dropdown li a {
+  padding: 10px 20px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  font-size: 1.25em;
+}
+
+#app .dropdown li a .fa {
+  padding-right: 0.5em;
+}
+</style>
+</head>
+<body>
+    <p>teste</p>
+    <div id="app">
+        <h1>Vue Select - Custom Option Templating</h1>
+        <v-select  v-model="selected"  :options="options" label="title">
+          <template slot="option" slot-scope="option">
+              <span class="fa" :class="option.icon"></span>
+              {{ option.title }}
+          </template>
+        </v-select>
+      </div>
+<script>
+      Vue.component('v-select', VueSelect.VueSelect)
+
+new Vue({
+  el: '#app',
+  data: {
+    selected: {
+          title: 'View on GitHub',
+          icon: 'fa-github',
+          url: 'https://codeclimate.com/github/sagalbot/vue-select'
+        },
+    options: [
+      {
+          title: 'Read the Docs',
+          icon: 'fa-book',
+          url: 'https://codeclimate.com/github/sagalbot/vue-select'
+        },
+        {
+          title: 'View on GitHub',
+          icon: 'fa-github',
+          url: 'https://codeclimate.com/github/sagalbot/vue-select'
+        },
+        {
+          title: 'View on NPM',
+          icon: 'fa-database',
+          url: 'https://codeclimate.com/github/sagalbot/vue-select'
+        },
+        {
+          title: 'View Codepen Examples',
+          icon: 'fa-pencil',
+          url: 'https://codeclimate.com/github/sagalbot/vue-select'
+        }
+    ]
+  }
+})
+        
+</script>
+</body>
+</html>

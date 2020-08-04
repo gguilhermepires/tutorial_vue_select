@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- include VueJS first -->
+<script src="https://unpkg.com/vue@latest"></script>
+
+<!-- use the latest vue-select release -->
+<script src="https://unpkg.com/vue-select@latest"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
+
+<!-- or point to a specific vue-select release -->
+<script src="https://unpkg.com/vue-select@3.0.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
+
+<script src="https://unpkg.com/vue@latest"></script>
+<script src="https://unpkg.com/vue-select@latest"></script>
+<script src="https://unpkg.com/lodash@latest/lodash.min.js"></script>
+<script src="https://unpkg.com/vue-select/dist/vue-select.css"></script>
+
+
+<style>
+img {
+  height: auto;
+  max-width: 2.5rem;
+  margin-right: 1rem;
+}
+
+.d-center {
+  display: flex;
+  align-items: center;
+}
+
+.selected img {
+  width: auto;
+  max-height: 23px;
+  margin-right: 0.5rem;
+}
+
+.v-select .dropdown li {
+  border-bottom: 1px solid rgba(112, 128, 144, 0.1);
+}
+
+.v-select .dropdown li:last-child {
+  border-bottom: none;
+}
+
+.v-select .dropdown li a {
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 1.25em;
+  color: #3c3c3c;
+}
+
+.v-select .dropdown-menu .active > a {
+  color: #fff;
+}
+</style>
+</head>
+<body>
+      <div id="app">
+        <h1>Vue Select - Ajax</h1>
+        <v-select label="name" :filterable="false" :options="options" @search="onSearch">
+          <template slot="no-options">
+            type to search GitHub repositories..
+          </template>
+          <template slot="option" slot-scope="option">
+            <div class="d-center">
+              <img :src='option.owner.avatar_url'/> 
+              {{ option.full_name }}
+              </div>
+          </template>
+          <template slot="selected-option" slot-scope="option">
+            <div class="selected d-center">
+              <img :src='option.owner.avatar_url'/> 
+              {{ option.full_name }}
+            </div>
+          </template>
+        </v-select>
+<script>
+      Vue.component('v-select', VueSelect.VueSelect)
+
+
+      new Vue({
+  el: "#app",
+  data: {
+    options: [] },
+
+  methods: {
+    onSearch(search, loading) {
+      loading(true);
+      this.search(loading, search, this);
+    },
+    search: _.debounce((loading, search, vm) => {
+      fetch(
+      `https://api.github.com/search/repositories?q=${escape(search)}`).
+      then(res => {
+        res.json().then(json => vm.options = json.items);
+        loading(false);
+      });
+    }, 350) } });
+
+
+        
+</script>
+</body>
+</html>

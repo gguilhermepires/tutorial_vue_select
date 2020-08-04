@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- include VueJS first -->
+<script src="https://unpkg.com/vue@latest"></script>
+
+<!-- use the latest vue-select release -->
+<script src="https://unpkg.com/vue-select@latest"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
+
+<!-- or point to a specific vue-select release -->
+<script src="https://unpkg.com/vue-select@3.0.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<style>
+    body {
+  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+}
+
+h1,.muted {
+  color: #2c3e5099;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 600;
+  text-rendering: optimizelegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-text-size-adjust: none;
+}
+
+#app {
+  max-width: 30em;
+  margin: 1em auto;
+}
+
+#app .dropdown li {
+  border-bottom: 1px solid rgba(112, 128, 144, 0.1)
+}
+
+#app .dropdown li:last-child {
+  border-bottom: none;
+}
+
+#app .dropdown li a {
+  padding: 10px 20px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  font-size: 1.25em;
+}
+
+#app .dropdown li a .fa {
+  padding-right: 0.5em;
+}
+</style>
+</head>
+<body>
+    <div id="app">
+        <h1>Vue Select - Custom Option Templating</h1>
+        <p>{{selected}}</p>
+        <v-select  v-model="selected"  :options="options" label="title">
+          <template slot="option" slot-scope="option">
+              <span class="fa" :class="option.icon"></span>
+              <span style="font-size: large;">{{ option.title }}</span>
+              <br>
+              <span style="font-size: smaller;">{{ option.subtitle }}</span>
+          </template>
+        </v-select>
+      </div>
+    <div id="app2">
+        <button @click="selecionaItem">Alterar select externo</button>
+    </div>
+<script>
+    Vue.component('v-select', VueSelect.VueSelect)
+    Vue.prototype.$eventHub = new Vue();
+    var selectVeiculo = new Vue({
+    el: '#app',
+    data: {
+        selected:'',
+        options: [],
+        idVeiculo:1,
+        id:''
+    }, 
+    methods:{
+        iniciaSelect(){
+    //   var eventOwnerId = $('#eventOwner').val();
+    //   var eventOwnerName = $('#eventOwner :selected').text();
+      $.ajax({
+        url: "servidor.php",
+        data: {
+          eventOwnerId: this.idVeiculo,
+          eventOwnerName: this.id,
+          method : "veiculo"
+        },
+        success: results =>{
+            var obj =  JSON.parse(results);
+            obj.forEach(element => {
+                this.options.push({
+                    title:element.text,
+                    subtitle:element.text,
+                    value:element.value
+                }); 
+            });
+        } 
+      });
+    }
+  },
+  created(){
+    this.$eventHub.$on('teste', function(item) {
+        console.log("recebeu",item);
+        selectVeiculo.selected = item;
+    });
+  },
+  mounted(){
+    this.iniciaSelect()
+  }
+})
+    
+    var cadmde = new Vue({
+        el: '#app2',
+        data: {
+            selected:'',
+            options: [],
+            idVeiculo:1,
+            id:''
+        }, 
+        methods:{
+            selecionaItem(){
+                var item = {
+                        title:'c',
+                        subtitle:'c',
+                        value:3
+                    }; 
+                    console.log("emitindo");
+                this.$eventHub.$emit('teste',item);
+            },
+        load(){
+        }
+    },mounted(){
+        this.load()
+    }
+    })
+        
+</script>
+</body>
+</html>
